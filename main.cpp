@@ -20,9 +20,8 @@ struct Card
 class Deck {
     public:
         vector<Card> cards;
-        Deck(){
-            unsigned seed = chrono::system_clock::now().time_since_epoch().count();
-            default_random_engine e(seed);
+        Deck(default_random_engine rng){
+            cout << "flag";
             cards.resize(52);
             for(int i =0; i< 4 ; i++){
                 for (int j =0; j<13; j++){
@@ -31,16 +30,19 @@ class Deck {
                     //shuffle(cards.begin(),cards.end(),e);
                 }
             }
+            shuffle(std::begin(cards), std::end(cards), rng);
         }
 };
 
 int main(){
     
     cout << "Hello world \n";    
-    Deck deck;
-    for (auto i = deck.cards.begin(); i != deck.cards.end(); ++i){
-        cout << +i->value<< " " <<i->suit << "\n";
+    auto rd = random_device {}; 
+    auto rng = default_random_engine { rd() };
+
+    Deck deck(rng);
+    for (auto i : deck.cards){
+        cout << +i.value<< " " << +i.suit << "\n";
     }
-    //delete deck;
     return 0;
 }
