@@ -1,14 +1,20 @@
 #include <iostream>
-#include<string>
-#include<vector>
-#include<random>
+#include <string>
+#include <vector>
+#include <random>
 #include <stdint.h>
-#include <chrono>       // std::chrono::system_clock
-#include <algorithm>    // std::shuffle
+#include <chrono>    // std::chrono::system_clock
+#include <algorithm> // std::shuffle
 
 using namespace std;
 
-enum tsuit {Diamonds, Hearts, Clubs, Spades};
+enum tsuit
+{
+    Diamonds,
+    Hearts,
+    Clubs,
+    Spades
+};
 
 struct Card
 {
@@ -32,7 +38,7 @@ class Deck {
             }
             shuffle(std::begin(cards), std::end(cards), rng);
         }
-};
+    };
 
 int main(){
     
