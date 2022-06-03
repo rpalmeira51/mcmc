@@ -5,6 +5,7 @@
 #include <stdint.h>
 #include <chrono>    // std::chrono::system_clock
 #include <algorithm> // std::shuffle
+#include <map>
 
 using namespace std;
 
@@ -16,18 +17,44 @@ enum tsuit
     Spades
 };
 
-struct Card
-{
-    uint8_t value;
-    tsuit suit;
-};
 
+class Card{
+    public: 
+    tsuit suit;
+    uint8_t value;
+
+    string svalue() const{
+        map<int, string> names = {
+            {1, "Ace"},
+            {11, "Queen"},
+            {12, "Jack"},
+            {13, "King"}
+        };
+        if(names.count(value) == 1){
+            return names[value];
+        }else{
+            return to_string(value);
+        }
+    }
+
+    string ssuit() const{
+        vector<string> vec = {"Diamonds", "Hearts","Clubs","Spades"};
+        return vec[suit];
+    }
+
+
+    friend std::ostream& operator<<(std::ostream& os, const Card& c)
+        {
+            return os << "Card: "<< c.svalue() << " of "<< c.ssuit();
+        }    
+};
 
 class Deck {
     public:
         vector<Card> cards;
-        Deck(default_random_engine rng){
-            cout << "flag";
+        Deck(){
+            auto rd = random_device {}; 
+            auto rng = default_random_engine { rd() };
             cards.resize(52);
             for(int i =0; i< 4 ; i++){
                 for (int j =0; j<13; j++){
@@ -38,17 +65,15 @@ class Deck {
             }
             shuffle(std::begin(cards), std::end(cards), rng);
         }
+
     };
 
 int main(){
     
     cout << "Hello world \n";    
-    auto rd = random_device {}; 
-    auto rng = default_random_engine { rd() };
-
-    Deck deck(rng);
+    Deck deck;
     for (auto i : deck.cards){
-        cout << +i.value<< " " << +i.suit << "\n";
+        cout << i<< "\n";
     }
     return 0;
 }
