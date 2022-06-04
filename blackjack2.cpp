@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <chrono>
 #include <map>
+#include <cmath>
 
 using namespace std;
 unsigned num = chrono::system_clock::now().time_since_epoch().count();
@@ -126,25 +127,39 @@ int handpoints(vector<Card> hand) // Função pra calcular a pontuação total
     return points;
 }
 
+
 class Player
 {
 public:
     vector<Card> playerhand;
-    int playervalue;
-
-    bool play(Game &gs)
+    virtual bool play()
     {
-
-        auto handvalue = gs.playervalue;
-
-        if (handvalue > 15)
+        auto handvalue = handpoints(playerhand);
+        if (handvalue <= 15)
         {
-            gs.stand(*this);
+            return true;
         }
-        else
+        return false;
+    }
+};
+
+class Game;
+class MCPlayer: public Player
+{
+public:
+    Game& game;
+    MCPlayer(Game& g): game(g){
+
+    }
+    bool play() override
+    {
+        cout << "Test" << endl;
+        auto handvalue = handpoints(playerhand);
+        if (handvalue <= 15)
         {
-            gs.hit(*this);
+            return true;
         }
+        return false;
     }
 };
 
@@ -152,18 +167,13 @@ class Dealer
 {
 public:
     vector<Card> tablehand;
-    int tablevalue;
-
-    void play(Game &gs)
+    bool play( int pvalue)
     {
-
-        auto dealervalue = gs.tablevalue;
-        auto playervalue = gs.playervalue;
-
-        if (dealervalue < playervalue)
-        {
-            gs.hit(*this);
+        auto dealervalue = handpoints(tablehand);
+        if(dealervalue > 21 || dealervalue > pvalue || pvalue > 21){
+            return false;
         }
+        return true;
     }
 };
 
@@ -171,11 +181,13 @@ class Game
 {
 public:
     vector<Card> cardPool;
-    bool is_stand;
-    bool bust;
-    bool dealer_is_stand;
-    bool dealer_bust;
+    bool is_stand = false;
+    bool bust= false;
+    bool dealer_is_stand = false;
+    bool dealer_bust= false;
     int winner; // -1 if table, 0 if tie, 1 if player
+    int tablevalue;
+    int playervalue;
 
     Player player;
     Dealer dealer;
@@ -186,29 +198,30 @@ public:
         Card last;
         last = cardPool.back();
         cardPool.pop_back();
-        tablehand.push_back(last);
+        dealer.tablehand.push_back(last);
         last = cardPool.back();
         cardPool.pop_back();
-        playerhand.push_back(last);
+        player.playerhand.push_back(last);
         last = cardPool.back();
         cardPool.pop_back();
-        tablehand.push_back(last);
+        dealer.tablehand.push_back(last);
         last = cardPool.back();
         cardPool.pop_back();
-        playerhand.push_back(last);
+        player.playerhand.push_back(last);
 
-        playervalue = handpoints(playerhand);
-        tablevalue = handpoints(tablehand);
+        playervalue = handpoints(player.playerhand);
+        tablevalue = handpoints(dealer.tablehand);
     }
 
-    void hit(Player player)
+
+    void hit(Player& player)
     {
         Card last;
         last = cardPool.back();
         cardPool.pop_back();
-        playerhand.push_back(last);
+        player.playerhand.push_back(last);
 
-        playervalue = handpoints(playerhand);
+        playervalue = handpoints(player.playerhand);
 
         if (playervalue > 21)
         {
@@ -216,14 +229,14 @@ public:
             is_stand = true;
         }
     }
-    void hit(Dealer dealer)
+    void hit(Dealer& dealer)
     {
         Card last;
         last = cardPool.back();
         cardPool.pop_back();
-        tablehand.push_back(last);
+        dealer.tablehand.push_back(last);
 
-        tablevalue = handpoints(tablehand);
+        tablevalue = handpoints(dealer.tablehand);
 
         if (tablevalue > 21)
         {
@@ -241,80 +254,92 @@ public:
         dealer_is_stand = true;
     }
 
-    void run()
+    bool run()
     {
-
-        while ((bust != false) && (is_stand != false))
+        while ((bust == false) && (is_stand == false))
         {
-
-            player.play(this);
+            //cout<< "Begin player moves" << endl;
+            if( player.play()){
+                //cout<< "Hit" << endl;
+                hit(player);
+            }else{
+                //cout<< "Stand" << endl;
+                stand(player);
+            }
+            for(auto i: player.playerhand){
+                //cout << i << "," << endl;
+            }
+        }   
+        int pvalue = handpoints(player.playerhand) ;
+        while ((dealer_bust == false) && (dealer_is_stand == false))
+        {
+            //cout<< "Begin Dealer moves" << endl;
+            if( dealer.play(pvalue)){
+                //cout<< "Hit" << endl;
+                hit(dealer);
+            }else{
+                //cout<< "Stand" << endl;
+                stand(dealer);
+            }
+            for(auto i: dealer.tablehand){
+                //cout << i << "," << endl;
+            }
         }
-
-        while ((dealer_bust != false) && (dealer_is_stand != false))
-        {
-
-            dealer.play(this);
+        int dvalue = handpoints(dealer.tablehand) ;
+        if(playerWin(dvalue,pvalue)){
+            //cout << "Player wins" << endl;
+            return true;
+        }else{
+            //cout << "Dealer wins" << endl;
+            return false;
         }
     }
 
-    int get_winner()
+    bool playerWin(int dvalue, int pvalue)
     {
-        if (bust == true)
-        {
-            return -1;
-        }
-        if (abs(tablevalue - 21) < abs(playervalue - 21))
-        {
-            return -1;
-        }
-        if (tablevalue == playervalue)
-        {
-            return 0;
-        }
-        else
-        {
-            return 1;
-        }
+        if (bust == true)return false;
+        else if( dealer_bust == true)return true;
+        else if( pvalue <= dvalue) return false;
+        else return true;
     }
 };
+
+
 
 int main()
 {
 
-    cout << " \n";
-    cout << "Welcome to Black Jack \n";
-    cout << " \n";
-    cout << "    Initializing ... \n";
-
-    Deck cardPool;
-    Game bj(cardPool.cards);
+    //cout << " \n";
+    //cout << "Welcome to Black Jack \n";
+    //cout << " \n";
+    //cout << "    Initializing ... \n";
 
     // Game starts by Defining the cardPool ( requires a int for the number of decks)
     // then Knuth shuffles a list of integers from 1 to 52*N to represent the cards.
     // we can find the value of a card by modular arithmetic.
 
-    cout << "Dealing Cards \n";
-    cout << "Player Hand \n";
+    //cout << "Dealing Cards \n";
+    //cout << "Player Hand \n";
 
-    for (Card i : bj.playerhand)
-    {
-        cout << i << ", ";
-    }
-
-    cout << '\n';
-    cout << " Table Hand \n";
-
-    for (auto i : bj.tablehand)
-    {
-        cout << i << ", ";
-    }
-    cout << "\n";
+    //for (Card i : bj.player.playerhand)
+    //{
+    //    //cout << i << ", ";
+    //}
+//
+    ////cout << '\n';
+    ////cout << " Table Hand \n";
+//
+    //for (auto i : bj.dealer.tablehand)
+    //{
+    //    //cout << i << ", ";
+    //}
+    //cout << "\n";
 
     // Then, we deal the first 4 cards (2 to the Dealer, 2 to the Player).
     // We are now able to begin a Game (playerValue, tableValue, cardPool)
     // in cardPool we should probably note the cards that have appeared or sth.
 
-    cout << " Waiting for a player move \n";
+    //cout << " Waiting for a player move \n";
 
     // this is the main game loop!
     // we then update Game.hit() or Game.split() or Game.stand()
@@ -324,6 +349,19 @@ int main()
     // Dealer then tries to beat the player score;
 
     // Reveal the game winner
-
-    bj.run();
+    int N = pow(10,6);
+    int wp = 0;
+    int wd = 0;
+    for(int i= 0; i < N; i++){
+        Deck cardPool;
+        Game bj(cardPool.cards);
+        MCPlayer p(bj);
+        if( bj.run()){
+            wp++;
+        }else{
+            wd++;
+        }
+    }
+    cout << "Player wins: " << wp << " Dealer wins: " << wd << endl;
+    return 0;
 }
