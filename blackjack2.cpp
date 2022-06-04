@@ -83,33 +83,7 @@ class Deck {
     };
 
 
-vector<int> shuffle_decks(int number_of_decks)
-{
-    int N = 52 * number_of_decks;
-    vector<int> decks(N);
-    iota(decks.begin(), decks.end(), 1);
 
-    shuffle(decks.begin(), decks.end(), rng);
-
-    return decks;
-}
-
-int card(int n) // Função que leva x -> -1, se x = As; x- > x; se x < J,Q,K; 10 c.c
-{
-    int x = (n % 52) % 13;
-    if ((2 <= x) and (x <= 9))
-    {
-        return x;
-    }
-    else if (x == 1)
-    {
-        return -1; // Ace
-    }
-    else
-    {
-        return 10;
-    }
-}
 
 int handpoints(vector<Card> hand) // Função pra calcular a pontuação total
 {
@@ -144,6 +118,20 @@ int handpoints(vector<Card> hand) // Função pra calcular a pontuação total
     return points;
 }
 
+class Player{
+    public:
+        vector<Card> Hand;
+
+    Player(vector<Card> ih): Hand(ih){
+
+    }
+    void play(){
+        
+    }
+    
+};
+
+
 class gameState{
 public:
     vector<Card> cardPool;
@@ -158,12 +146,19 @@ public:
     gameState(vector<Card> cards)
     {
         cardPool = cards;
-        tablehand.push_back(cardPool[0]);
-        playerhand.push_back(cardPool[1]);
-        tablehand.push_back(cardPool[2]);
-        playerhand.push_back(cardPool[3]);
-
-        // Como Remover cards[:4] i.e. refresh cardPool
+        Card last;
+        last = cardPool.back();
+        cards.pop_back();
+        tablehand.push_back(last);
+        last = cardPool.back();
+        cards.pop_back();
+        playerhand.push_back(last);
+        last = cardPool.back();
+        cards.pop_back();
+        tablehand.push_back(last);
+        last = cardPool.back();
+        cards.pop_back();
+        playerhand.push_back(last);
 
         playervalue = handpoints(playerhand);
         tablevalue = handpoints(tablehand);
