@@ -1,4 +1,4 @@
-run: main main.cpp
+run: main blackjack2.cpp
 	./main
-main: main.cpp
-	g++ -std=c++17 main.cpp -o main
+main: blackjack2.cpp
+	g++ -std=c++17 blackjack2.cpp -o main
