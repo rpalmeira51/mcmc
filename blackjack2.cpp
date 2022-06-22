@@ -7,6 +7,7 @@
 #include <chrono>
 #include <map>
 #include <cmath>
+#include <memory>
 
 using namespace std;
 unsigned num = chrono::system_clock::now().time_since_epoch().count();
@@ -95,6 +96,12 @@ public:
         }
         shuffle(std::begin(cards), std::end(cards), rng);
     }
+
+    void reshuffle(){
+        auto rd = random_device{};
+        auto rng = default_random_engine{rd()};
+        shuffle(std::begin(cards), std::end(cards), rng);
+    }
 };
 
 int handpoints(vector<Card> hand) // Função pra calcular a pontuação total
@@ -136,6 +143,7 @@ public:
     vector<Card> playerhand;
     virtual bool play()
     {
+        cout << "FLAG"<< endl;
         auto handvalue = handpoints(playerhand);
         if (handvalue <= 15)
         {
@@ -175,7 +183,7 @@ public:
     Player &player;
     Dealer dealer;
 
-    Game &operator=(Game &g)
+    void copy (Game g)
     {
         Cards = g.Cards;
 
@@ -185,32 +193,78 @@ public:
         dealer_bust = g.dealer_bust;
         tablevalue = g.tablevalue;
         playervalue = g.playervalue;
-        player = g.player;
         dealer = g.dealer;
-
-        return *this;
     }
-    Game(Player &p, bool Verbose = true) : player(p) // dealing first hands
-    {
 
-        hit(player);
-        hit(dealer);
-        hit(player);
-        hit(dealer);
+    // Game (const Game &g) : player(g.player)
+    // {
+    //     Cards = g.Cards;
 
+    //     is_stand = g.is_stand;
+    //     bust = g.bust;
+    //     dealer_is_stand = g.dealer_is_stand;
+    //     dealer_bust = g.dealer_bust;
+    //     tablevalue = g.tablevalue;
+    //     playervalue = g.playervalue;
+    //     dealer = g.dealer;
+    // }
+    
+    Game(Player &p, Game g, bool Verbose = true): player(p){
+        g.Cards.reshuffle();
+        Cards = g.Cards;
+        is_stand = g.is_stand;
+        bust = g.bust;
+        dealer_is_stand = g.dealer_is_stand;
+        dealer_bust = g.dealer_bust;
+        tablevalue = g.tablevalue;
+        playervalue = g.playervalue;
+        dealer = g.dealer;
         if (Verbose == true)
         {
             cout << " Player Hand " << endl;
             for (auto i : player.playerhand)
             {
-                cout << i << ", ";
+                cout << "\t" << i << ", ";
             }
             cout << endl;
 
             cout << " Dealer Hand " << endl;
             for (auto i : dealer.tablehand)
             {
-                cout << i << ", ";
+                cout << "\t" << i << ", ";
+            }
+            cout << endl;
+        }
+
+        playervalue = handpoints(player.playerhand);
+        if (playervalue == 21)
+        {
+            is_stand = true;
+            dealer_is_stand = true;
+        }; // black jack = player insta win
+        tablevalue = handpoints(dealer.tablehand);
+
+    }
+
+    Game(Player &p, bool Verbose = true) : player(p) // dealing first hands
+    {
+        hit(player);
+        hit(dealer);
+        hit(player);
+        hit(dealer);
+        if (Verbose == true)
+        {
+            cout << " Player Hand " << endl;
+            for (auto i : player.playerhand)
+            {
+                cout << "\t" << i << ", ";
+            }
+            cout << endl;
+
+            cout << " Dealer Hand " << endl;
+            for (auto i : dealer.tablehand)
+            {
+                cout << "\t" << i << ", ";
             }
             cout << endl;
         }
@@ -226,6 +280,7 @@ public:
 
     void hit(Player &player)
     {
+        cout << "Player Hit" << endl;
         Card last;
         last = Cards.cards.back();
         Cards.cards.pop_back();
@@ -238,11 +293,16 @@ public:
             bust = true;
             is_stand = true;
         }
+        cout << " Player Hand " << endl;
+        for (auto i : player.playerhand)
+        {
+            cout << "\t" << i << "," << endl;
+        }
     }
     void hit(Dealer &dealer)
 
     {
-
+        cout << "Dealer Hit" << endl;
         Card last;
         last = Cards.cards.back();
         Cards.cards.pop_back();
@@ -255,15 +315,32 @@ public:
             dealer_bust = true;
             dealer_is_stand = true;
         }
+        cout << "Dealer Hand " << endl;
+        for (auto i : dealer.tablehand)
+        {
+            cout << "\t" << i << "," << endl;
+        }
     }
 
     void stand(Player player)
     {
+        cout << "Player Stand" << endl;
         is_stand = true;
+        cout << " Player Hand " << endl;
+        for (auto i : player.playerhand)
+        {
+            cout << "\t" << i << "," << endl;
+        }
     }
     void stand(Dealer dealer)
     {
+        cout << "Dealer Stand" << endl;
         dealer_is_stand = true;
+        cout << "Dealer Hand " << endl;
+        for (auto i : dealer.tablehand)
+        {
+            cout << "\t" << i << "," << endl;
+        }
     }
 
     int run(bool Verbose = true)
@@ -273,43 +350,27 @@ public:
             cout << "Begin player moves" << endl;
             if (player.play())
             {
-                cout << "Hit" << endl;
                 hit(player);
             }
             else
             {
-                cout << "Stand" << endl;
                 stand(player);
-            }
-            cout << " Player Hand " << endl;
-            for (auto i : player.playerhand)
-            {
-                cout << i << "," << endl;
             }
         }
         int pvalue = handpoints(player.playerhand);
-        int dvalue = handpoints(dealer.tablehand);
-
-        while ((dvalue > 21) && (dealer_is_stand == false))
+        while ((dealer_bust == false) && (dealer_is_stand == false))
         {
             cout << "Begin Dealer moves" << endl;
             if (dealer.play(pvalue))
             {
-                cout << "Hit" << endl;
                 hit(dealer);
             }
             else
             {
-                cout << "Stand" << endl;
                 stand(dealer);
             }
-            cout << "Dealer Hand " << endl;
-            for (auto i : dealer.tablehand)
-            {
-                cout << i << "," << endl;
-            }
-            int dvalue = handpoints(dealer.tablehand);
         }
+        int dvalue = handpoints(dealer.tablehand);
         if (Verbose == true)
         {
             cout << "Player Score: " << pvalue << " Dealer Score: " << dvalue << endl;
@@ -337,45 +398,45 @@ class MCPlayer : public Player
 {
 public:
     Player p;
-    Game game;
-    int Niter = 10;
-    MCPlayer() : game(p, false)
+    unique_ptr<Game> game;
+    int Niter = 2;
+    MCPlayer()
     {
     }
     void setGame(Game g)
     {
-        game = g;
+        game =  make_unique<Game>((*this), g,true);
     }
 
     bool play() override
     {
-        Game currGame = game;
-
         int hl = 0; // losses with hit
         int sl = 0; // losses with stand
-
+        cout << "Chega" << endl;
         for (int i = 0; i < Niter; i++)
         {
+            cout << "======================" << endl;
             MCPlayer ptest;
             ptest.playerhand = playerhand;
-            currGame.player = ptest;
-            ptest.setGame(currGame);
-            currGame.hit(currGame.player);
-            int gamescore = currGame.run(true);
+            ptest.setGame((*game));
+            ptest.game->hit(ptest);
+            int gamescore = ptest.game->run(true);
             if (gamescore == -1)
                 hl++;
+            cout << "======================" << endl;
         }
 
         for (int i = 0; i < Niter; i++)
         {
+            cout << "++++++++++++++++++++++++++++++++" << endl;
             MCPlayer ptest;
             ptest.playerhand = playerhand;
-            currGame.player = ptest;
-            ptest.setGame(currGame);
-            currGame.stand(currGame.player); // stand(player)
-            int gamescore = currGame.run(true);
+            ptest.setGame((*game));
+            ptest.game->stand(ptest);
+            int gamescore = ptest.game->run(true);
             if (gamescore == -1)
                 sl++;
+            cout << "++++++++++++++++++++++++++++++++" << endl;
         }
 
         if (hl <= sl)

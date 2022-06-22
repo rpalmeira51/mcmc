@@ -1,0 +1,109 @@
+./main
+Player Hit
+ Player Hand 
+	Card: Jack of Spades,
+Dealer Hit
+Dealer Hand 
+	Card: Jack of Diamonds,
+Player Hit
+ Player Hand 
+	Card: Jack of Spades,
+	Card: 8 of Clubs,
+Dealer Hit
+Dealer Hand 
+	Card: Jack of Diamonds,
+	Card: King of Hearts,
+ Player Hand 
+	Card: Jack of Spades, 	Card: 8 of Clubs, 
+ Dealer Hand 
+	Card: Jack of Diamonds, 	Card: King of Hearts, 
+ Player Hand 
+	Card: Jack of Spades, 	Card: 8 of Clubs, 
+ Dealer Hand 
+	Card: Jack of Diamonds, 	Card: King of Hearts, 
+Begin player moves
+Chega
+======================
+ Player Hand 
+	Card: Jack of Spades, 	Card: 8 of Clubs, 
+ Dealer Hand 
+	Card: Jack of Diamonds, 	Card: King of Hearts, 
+Player Hit
+ Player Hand 
+	Card: Jack of Spades,
+	Card: 8 of Clubs,
+	Card: 10 of Hearts,
+Begin Dealer moves
+Dealer Stand
+Dealer Hand 
+	Card: Jack of Diamonds,
+	Card: King of Hearts,
+Player Score: 28 Dealer Score: 20
+ Winner is -1
+======================
+======================
+ Player Hand 
+	Card: Jack of Spades, 	Card: 8 of Clubs, 
+ Dealer Hand 
+	Card: Jack of Diamonds, 	Card: King of Hearts, 
+Player Hit
+ Player Hand 
+	Card: Jack of Spades,
+	Card: 8 of Clubs,
+	Card: 10 of Diamonds,
+Begin Dealer moves
+Dealer Stand
+Dealer Hand 
+	Card: Jack of Diamonds,
+	Card: King of Hearts,
+Player Score: 28 Dealer Score: 20
+ Winner is -1
+======================
+++++++++++++++++++++++++++++++++
+ Player Hand 
+	Card: Jack of Spades, 	Card: 8 of Clubs, 
+ Dealer Hand 
+	Card: Jack of Diamonds, 	Card: King of Hearts, 
+Player Stand
+ Player Hand 
+	Card: Jack of Spades,
+	Card: 8 of Clubs,
+Begin Dealer moves
+Dealer Stand
+Dealer Hand 
+	Card: Jack of Diamonds,
+	Card: King of Hearts,
+Player Score: 18 Dealer Score: 20
+ Winner is -1
+++++++++++++++++++++++++++++++++
+++++++++++++++++++++++++++++++++
+ Player Hand 
+	Card: Jack of Spades, 	Card: 8 of Clubs, 
+ Dealer Hand 
+	Card: Jack of Diamonds, 	Card: King of Hearts, 
+Player Stand
+ Player Hand 
+	Card: Jack of Spades,
+	Card: 8 of Clubs,
+Begin Dealer moves
+Dealer Stand
+Dealer Hand 
+	Card: Jack of Diamonds,
+	Card: King of Hearts,
+Player Score: 18 Dealer Score: 20
+ Winner is -1
+++++++++++++++++++++++++++++++++
+Player Hit
+ Player Hand 
+	Card: Jack of Spades,
+	Card: 8 of Clubs,
+	Card: 10 of Clubs,
+Begin Dealer moves
+Dealer Stand
+Dealer Hand 
+	Card: Jack of Diamonds,
+	Card: King of Hearts,
+Player Score: 28 Dealer Score: 20
+ Winner is -1
+Player wins: 0 Dealer wins: 1 Ties: 0
+0
