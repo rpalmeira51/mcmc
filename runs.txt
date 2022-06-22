@@ -1,0 +1,22 @@
+Iterations: 10000; Depth: 10;
+
+Player wins: 4798 Dealer wins: 5052 Ties: 150
+    Wins + Ties: 4948;
+
+
+Iterations: 10000; Depth: 15;
+
+Player wins: 4773 Dealer wins: 5067 Ties: 160
+    Wins + Ties: 4933;
+
+
+Iterations: 10000; Depth: 20;
+
+Player wins: 4934 Dealer wins: 4909 Ties: 157
+    Wins + Ties: 5091;
+
+
+Iterations: 1000000; Depth: 10;
+
+Player wins: 480786 Dealer wins: 502756 Ties: 16458
+    Wins + Ties: 497244
