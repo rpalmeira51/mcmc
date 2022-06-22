@@ -49,5 +49,10 @@
         "typeinfo": "cpp",
         "map": "cpp",
         "cinttypes": "cpp"
-    }
+    },
+    "cSpell.words": [
+        "gamescore",
+        "playervalue",
+        "ptest"
+    ]
 }
