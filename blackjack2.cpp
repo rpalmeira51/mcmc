@@ -78,7 +78,7 @@ public:
 class Deck
 {
 private:
-    auto select_random(const map<int,Card*> &s, size_t n) {
+    auto select_random(const map<int,Card> &s, size_t n) {
         auto it = std::begin(s);
         // 'advance' the iterator n times
         std::advance(it,n);
@@ -90,7 +90,7 @@ public:
     int cardCount = 52;
     bool deckout = false;
     default_random_engine rng;
-    map<int,Card*> cards;
+    map<int,Card> cards;
 
     Deck()
     {
@@ -103,7 +103,7 @@ public:
             {
                 //cards[i * 13 + j] = Card(j + 1, (tsuit)i);
                 // shuffle(cards.begin(),cards.end(),e);
-                cards.insert(make_pair(i*13+j,new Card(j + 1, (tsuit)i)));
+                cards.insert(make_pair(i*13+j,Card(j + 1, (tsuit)i)));
             }
         }
 
@@ -114,7 +114,7 @@ public:
         uniform_int_distribution<int> distrib(0, cards.size()-1);
         int i = distrib(rng);
         auto c =select_random(cards,i);
-        Card r = (* (*c).second);
+        Card r = ((*c).second);
         cards.erase(c);
         return r;
     }
