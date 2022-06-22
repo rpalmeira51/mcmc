@@ -8,7 +8,8 @@
 #include <map>
 #include <cmath>
 #include <memory>
-
+#include <set>
+#include <bits/stdc++.h>
 using namespace std;
 unsigned num = chrono::system_clock::now().time_since_epoch().count();
 auto rng = default_random_engine(num);
@@ -76,33 +77,48 @@ public:
 
 class Deck
 {
+private:
+    auto select_random(const map<int,Card*> &s, size_t n) {
+        auto it = std::begin(s);
+        // 'advance' the iterator n times
+        std::advance(it,n);
+        return it;
+    }
+
 public:
-    vector<Card> cards;
+    //vector<Card> cards;
     int cardCount = 52;
     bool deckout = false;
+    default_random_engine rng;
+    map<int,Card*> cards;
 
     Deck()
     {
         auto rd = random_device{};
-        auto rng = default_random_engine{rd()};
-        cards.resize(52);
+        rng = default_random_engine{rd()};
+        //cards.resize(52);
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 13; j++)
             {
-                cards[i * 13 + j] = Card(j + 1, (tsuit)i);
+                //cards[i * 13 + j] = Card(j + 1, (tsuit)i);
                 // shuffle(cards.begin(),cards.end(),e);
+                cards.insert(make_pair(i*13+j,new Card(j + 1, (tsuit)i)));
             }
         }
-        shuffle(std::begin(cards), std::end(cards), rng);
+
+        //shuffle(std::begin(cards), std::end(cards), rng);
     }
 
-    void reshuffle()
-    {
-        auto rd = random_device{};
-        auto rng = default_random_engine{rd()};
-        shuffle(std::begin(cards), std::end(cards), rng);
+    Card NextCard(){
+        uniform_int_distribution<int> distrib(0, cards.size()-1);
+        int i = distrib(rng);
+        auto c =select_random(cards,i);
+        Card r = (* (*c).second);
+        cards.erase(c);
+        return r;
     }
+
 };
 
 int handpoints(vector<Card> hand) // Função pra calcular a pontuação total
@@ -212,7 +228,6 @@ public:
 
     Game(Player &p, Game g, bool Verbose = true) : player(p)
     {
-        g.Cards.reshuffle();
         Cards = g.Cards;
         is_stand = g.is_stand;
         bust = g.bust;
@@ -284,8 +299,7 @@ public:
     {
         // cout << "Player Hit" << endl;
         Card last;
-        last = Cards.cards.back();
-        Cards.cards.pop_back();
+        last = Cards.NextCard();
         player.playerhand.push_back(last);
 
         playervalue = handpoints(player.playerhand);
@@ -306,8 +320,7 @@ public:
     {
         // cout << "Dealer Hit" << endl;
         Card last;
-        last = Cards.cards.back();
-        Cards.cards.pop_back();
+        last = Cards.NextCard();
         dealer.tablehand.push_back(last);
 
         tablevalue = handpoints(dealer.tablehand);
@@ -498,7 +511,7 @@ int main()
     // Dealer then tries to beat the player score;
 
     // Reveal the game winner
-    int Niter = pow(10000, 1);
+    int Niter = pow(10, 3);
     int NofDecks = 100;
     int wp = 0;
     int wd = 0;
