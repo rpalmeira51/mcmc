@@ -451,6 +451,9 @@ public:
         for( auto c: hand){
             s+= c.str();
         }
+        for(auto dh: game->dealer.tablehand){
+            s+= dh.str();
+        }
         return s;
     }
 
@@ -498,13 +501,13 @@ public:
         // cout << handpoints(playerhand) << endl;
         if (hl <= sl)
         {
-            if(keep_map &&scoremap.count(sh) == 0 && scoremap.size() < 100000){
+            if(keep_map &&scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 4){
                 scoremap[sh] = true;
             }    
             return true;
         }
         // cout << " Player chose stand " << endl;
-        if( keep_map && scoremap.count(sh) == 0 && scoremap.size() < 100000){
+        if( keep_map && scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 4){
             scoremap[sh] = false;
         }
         return false;
