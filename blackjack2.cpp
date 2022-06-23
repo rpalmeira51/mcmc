@@ -432,7 +432,7 @@ class MCPlayer : public Player
 public:
     Player p;
     unique_ptr<Game> game;
-    int Niter = 15;
+    int Niter = 10;
     bool keep_map;
     MCPlayer(bool keep_map=false): keep_map(keep_map)
     {
@@ -453,6 +453,7 @@ public:
         for( auto c: hand){
             s+= c.str();
         }
+        s+= "D";
         for(auto dh: dealerhand){
             s+= dh.str();
         }
@@ -462,8 +463,8 @@ public:
     bool play() override
     {
         
-        int hl = 0; // losses with hit
-        int sl = 0; // losses with stand
+        int hw = 0; // losses with hit
+        int sw = 0; // losses with stand
         // cout << "Chega" << endl;
 
         string sh = "";
@@ -482,8 +483,8 @@ public:
             ptest.setGame((*game));
             ptest.game->hit(ptest);
             int gamescore = ptest.game->run(true);
-            if (gamescore == -1)
-                hl++;
+            if (gamescore == 1)
+                hw++;
             // cout << "======================" << endl;
         }
 
@@ -495,15 +496,29 @@ public:
             ptest.setGame((*game));
             ptest.game->stand(ptest);
             int gamescore = ptest.game->run(true);
-            if (gamescore == -1)
-                sl++;
+            if (gamescore == 1)
+                sw++;
             // cout << "++++++++++++++++++++++++++++++++" << endl;
         }
 
         // cout << handpoints(playerhand) << endl;
-        if (hl <= sl)
+        if (hw > sw)
         {
             if(keep_map &&scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 3){
+                //size_t found = sh.rfind("9 of Diamonds10 of Spades"); 
+                if (handpoints(playerhand) > 18){
+                    cout << " Player Hand " << endl;
+                    for (auto i : playerhand)
+                    {
+                        cout << "\t" << i << "," << endl;
+                    }
+                    cout << "Dealer Hand " << endl;
+                    for (auto i : game->dealer.tablehand)
+                    {
+                        cout << "\t" << i << "," << endl;
+                    }
+                    cout << "hw: " << hw << "sw: " <<" "<< sw<< endl;
+                }
                 scoremap[sh] = true;
             }    
             return true;
@@ -559,7 +574,7 @@ int main()
     // Dealer then tries to beat the player score;
 
     // Reveal the game winner
-    int Niter = pow(10, 3);
+    int Niter = pow(10, 2);
     int NofDecks = 100;
     int wp = 0;
     int wd = 0;
@@ -602,5 +617,9 @@ int main()
     double ratio = 1 - wd / (double)Niter;
 
     cout << " Winrate: " << ratio << endl;
+
+    for (auto const &pair: scoremap) {
+        cout << "{" << pair.first << "  :  " << pair.second << "}\n";
+    }
     return 0;
 }
