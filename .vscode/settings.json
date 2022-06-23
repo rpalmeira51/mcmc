@@ -54,7 +54,11 @@
         "unordered_set": "cpp",
         "regex": "cpp",
         "valarray": "cpp",
-        "bitset": "cpp"
+        "bitset": "cpp",
+        "complex": "cpp",
+        "shared_mutex": "cpp",
+        "thread": "cpp",
+        "variant": "cpp"
     },
     "cSpell.words": [
         "gamescore",

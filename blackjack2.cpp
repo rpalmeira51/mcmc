@@ -100,28 +100,30 @@ public:
     {
         auto rd = random_device{};
         rng = default_random_engine{rd()};
-        //cards.resize(52);
+        cards.resize(52);
         for (int i = 0; i < 4; i++)
         {
             for (int j = 0; j < 13; j++)
             {
-                //cards[i * 13 + j] = Card(j + 1, (tsuit)i);
+                cards[i * 13 + j] = Card(j + 1, (tsuit)i);
                 // shuffle(cards.begin(),cards.end(),e);
-                cards.insert(make_pair(i*13+j,Card(j + 1, (tsuit)i)));
+                //cards.insert(make_pair(i*13+j,Card(j + 1, (tsuit)i)));
             }
         }
 
-        //shuffle(std::begin(cards), std::end(cards), rng);
+        shuffle(std::begin(cards), std::end(cards), rng);
+    }
+    
+    void reshuffle()
+    {
+        auto rd = random_device{};
+        auto rng = default_random_engine{rd()};
+        shuffle(std::begin(cards), std::end(cards), rng);
     }
 
     Card NextCard(){
-        auto rd = random_device{};
-        rng = default_random_engine{rd()};
-        uniform_int_distribution<int> distrib(0, cards.size()-1);
-        int i = distrib(rng);
-        auto c =select_random(cards,i);
-        Card r = ((*c).second);
-        cards.erase(c);
+        auto r = cards.back();
+        cards.pop_back();
         return r;
     }
 
@@ -234,6 +236,7 @@ public:
     Game(Player &p, Game g, bool Verbose = true) : player(p)
     {
         Cards = g.Cards;
+        Cards.reshuffle();
         is_stand = g.is_stand;
         bust = g.bust;
         dealer_is_stand = g.dealer_is_stand;
@@ -427,13 +430,14 @@ bool compareCards(Card a, Card b){
         return a.pvalue < b.pvalue;
     }
 }
-
+int number =0;
+int max_size =0;
 class MCPlayer : public Player
 {
 public:
     Player p;
     unique_ptr<Game> game;
-    int Niter = 15;
+    int Niter = 30;
     bool keep_map;
     MCPlayer(bool keep_map=false): keep_map(keep_map)
     {
@@ -463,6 +467,9 @@ public:
 
     bool play() override
     {
+        if(playerhand.size() >4){
+            return Player::play();
+        }
         
         int hw = 0; // losses with hit
         int sw = 0; // losses with stand
@@ -483,9 +490,12 @@ public:
             ptest.playerhand = playerhand;
             ptest.setGame((*game));
             ptest.game->hit(ptest);
-            int gamescore = ptest.game->run(true);
-            if (gamescore == 1)
-                hw++;
+            max_size = max(max_size,(int)ptest.playerhand.size());
+            if(!ptest.game->bust){
+                int gamescore = ptest.game->run(true);
+                if (gamescore == 1)
+                    hw++;
+            }
             // cout << "======================" << endl;
         }
 
@@ -501,7 +511,7 @@ public:
                 sw++;
             // cout << "++++++++++++++++++++++++++++++++" << endl;
         }
-
+        number++;
         // cout << handpoints(playerhand) << endl;
         if (hw > sw)
         {
@@ -562,7 +572,7 @@ int main()
     // Dealer then tries to beat the player score;
 
     // Reveal the game winner
-    int Niter = pow(10, 3);
+    int Niter = pow(10, 4);
     int NofDecks = 100;
     int wp = 0;
     int wd = 0;
@@ -570,6 +580,7 @@ int main()
     for (int i = 0; i < Niter; i++)
     {
         MCPlayer player(false);
+        //Player player;
         Game bj(player);
         player.setGame(bj);
 
@@ -604,6 +615,8 @@ int main()
     double ratio = 1 - wd / (double)Niter;
 
     cout << " Winrate: " << ratio << endl;
+    //cout << number<< endl;
+    //cout <<" ms " << max_size<< endl;
 
     return 0;
 }
