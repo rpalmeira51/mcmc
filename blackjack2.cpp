@@ -10,6 +10,7 @@
 #include <memory>
 #include <set>
 #include <bits/stdc++.h>
+
 using namespace std;
 unsigned num = chrono::system_clock::now().time_since_epoch().count();
 auto rng = default_random_engine(num);
@@ -24,11 +25,9 @@ enum tsuit
 
 class Card
 {
-private:
-    uint8_t pvalue;
-
 public:
     tsuit suit;
+    uint8_t pvalue;
     Card(){};
     Card(u_int8_t value, tsuit suit) : pvalue(value), suit(suit)
     {
@@ -73,6 +72,12 @@ public:
     {
         return os << "Card: " << c.svalue() << " of " << c.ssuit();
     }
+
+    string str (){
+        return svalue() + " of " + ssuit();
+    }
+    
+    
 };
 
 class Deck
@@ -160,7 +165,6 @@ public:
     vector<Card> playerhand;
     virtual bool play()
     {
-        cout << "FLAG" << endl;
         auto handvalue = handpoints(playerhand);
         if (handvalue <= 15)
         {
@@ -177,7 +181,7 @@ public:
     bool play(int pvalue)
     {
         auto dealervalue = handpoints(tablehand);
-        if (dealervalue >= 21 || dealervalue > pvalue || pvalue > 21)
+        if (dealervalue >= 17 || dealervalue > pvalue || pvalue > 21)
         {
             return false;
         }
@@ -412,25 +416,59 @@ public:
     }
 };
 
+map<string,bool> scoremap;
+bool compareCards(Card a, Card b){
+    if(a.suit < b.suit){
+        return true;
+    }else if(a.suit > b.suit){
+        return false;
+    }else{
+        return a.pvalue < b.pvalue;
+    }
+}
+
 class MCPlayer : public Player
 {
 public:
     Player p;
     unique_ptr<Game> game;
     int Niter = 10;
-    MCPlayer()
+    bool keep_map;
+    MCPlayer(bool keep_map=false): keep_map(keep_map)
     {
+
     }
+    
     void setGame(Game g)
     {
         game = make_unique<Game>((*this), g, true);
     }
 
+    string playhand(){
+        auto hand = playerhand;
+        sort(hand.begin(), hand.end(),compareCards);
+        string s = "";
+        for( auto c: hand){
+            s+= c.str();
+        }
+        return s;
+    }
+
     bool play() override
     {
+        
         int hl = 0; // losses with hit
         int sl = 0; // losses with stand
         // cout << "Chega" << endl;
+
+        string sh = "";
+        if(keep_map){
+            sh = playhand();
+            if(scoremap.count(sh) == 1){
+                return scoremap[sh];
+            }
+        }
+
         for (int i = 0; i < Niter; i++)
         {
             // cout << "======================" << endl;
@@ -460,10 +498,15 @@ public:
         // cout << handpoints(playerhand) << endl;
         if (hl <= sl)
         {
-            // cout << " Player chose hit " << endl;
+            if(keep_map &&scoremap.count(sh) == 0 && scoremap.size() < 100000){
+                scoremap[sh] = true;
+            }    
             return true;
         }
         // cout << " Player chose stand " << endl;
+        if( keep_map && scoremap.count(sh) == 0 && scoremap.size() < 100000){
+            scoremap[sh] = false;
+        }
         return false;
     }
 };
@@ -518,7 +561,7 @@ int main()
     int wtie = 0;
     for (int i = 0; i < Niter; i++)
     {
-        MCPlayer player;
+        MCPlayer player(true);
         Game bj(player);
         player.setGame(bj);
 
