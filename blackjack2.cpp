@@ -432,7 +432,7 @@ class MCPlayer : public Player
 public:
     Player p;
     unique_ptr<Game> game;
-    int Niter = 10;
+    int Niter = 15;
     bool keep_map;
     MCPlayer(bool keep_map=false): keep_map(keep_map)
     {
@@ -447,11 +447,13 @@ public:
     string playhand(){
         auto hand = playerhand;
         sort(hand.begin(), hand.end(),compareCards);
+        auto dealerhand = game->dealer.tablehand;
+        sort(dealerhand.begin(), dealerhand.end(),compareCards);
         string s = "";
         for( auto c: hand){
             s+= c.str();
         }
-        for(auto dh: game->dealer.tablehand){
+        for(auto dh: dealerhand){
             s+= dh.str();
         }
         return s;
@@ -501,13 +503,13 @@ public:
         // cout << handpoints(playerhand) << endl;
         if (hl <= sl)
         {
-            if(keep_map &&scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 4){
+            if(keep_map &&scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 3){
                 scoremap[sh] = true;
             }    
             return true;
         }
         // cout << " Player chose stand " << endl;
-        if( keep_map && scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 4){
+        if( keep_map && scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 3){
             scoremap[sh] = false;
         }
         return false;
@@ -564,6 +566,7 @@ int main()
     int wtie = 0;
     for (int i = 0; i < Niter; i++)
     {
+        //MCPlayer player(true);
         MCPlayer player(true);
         Game bj(player);
         player.setGame(bj);
