@@ -94,8 +94,7 @@ public:
     //vector<Card> cards;
     int cardCount = 52;
     bool deckout = false;
-    default_random_engine rng;
-    map<int,Card> cards;
+    vector<Card> cards;
 
     Deck()
     {
@@ -116,6 +115,8 @@ public:
     }
 
     Card NextCard(){
+        auto rd = random_device{};
+        rng = default_random_engine{rd()};
         uniform_int_distribution<int> distrib(0, cards.size()-1);
         int i = distrib(rng);
         auto c =select_random(cards,i);
@@ -432,7 +433,7 @@ class MCPlayer : public Player
 public:
     Player p;
     unique_ptr<Game> game;
-    int Niter = 10;
+    int Niter = 15;
     bool keep_map;
     MCPlayer(bool keep_map=false): keep_map(keep_map)
     {
@@ -506,19 +507,6 @@ public:
         {
             if(keep_map &&scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 3){
                 //size_t found = sh.rfind("9 of Diamonds10 of Spades"); 
-                if (handpoints(playerhand) > 18){
-                    cout << " Player Hand " << endl;
-                    for (auto i : playerhand)
-                    {
-                        cout << "\t" << i << "," << endl;
-                    }
-                    cout << "Dealer Hand " << endl;
-                    for (auto i : game->dealer.tablehand)
-                    {
-                        cout << "\t" << i << "," << endl;
-                    }
-                    cout << "hw: " << hw << "sw: " <<" "<< sw<< endl;
-                }
                 scoremap[sh] = true;
             }    
             return true;
@@ -574,15 +562,14 @@ int main()
     // Dealer then tries to beat the player score;
 
     // Reveal the game winner
-    int Niter = pow(10, 2);
+    int Niter = pow(10, 3);
     int NofDecks = 100;
     int wp = 0;
     int wd = 0;
     int wtie = 0;
     for (int i = 0; i < Niter; i++)
     {
-        //MCPlayer player(true);
-        MCPlayer player(true);
+        MCPlayer player(false);
         Game bj(player);
         player.setGame(bj);
 
@@ -618,8 +605,5 @@ int main()
 
     cout << " Winrate: " << ratio << endl;
 
-    for (auto const &pair: scoremap) {
-        cout << "{" << pair.first << "  :  " << pair.second << "}\n";
-    }
     return 0;
 }

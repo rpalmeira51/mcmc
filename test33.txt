@@ -1,109 +1,15 @@
  Progress: 0
- Player Hand 
-	Card: King of Clubs,
-	Card: Jack of Spades,
-Dealer Hand 
-	Card: Queen of Spades,
-hw: 10sw:  0
- Player Hand 
-	Card: King of Clubs,
-	Card: 9 of Clubs,
-Dealer Hand 
-	Card: 6 of Hearts,
-hw: 10sw:  0
-Player wins: 48 Dealer wins: 49 Ties: 3
- Winrate: 0.51
-{10 of Diamonds4 of HeartsD9 of Clubs  :  1}
-{10 of Diamonds6 of SpadesD6 of Hearts  :  1}
-{10 of Hearts10 of SpadesD4 of Hearts  :  0}
-{10 of Hearts2 of ClubsD2 of Spades  :  1}
-{10 of Hearts6 of ClubsDQueen of Hearts  :  1}
-{10 of HeartsQueen of ClubsD6 of Diamonds  :  0}
-{10 of SpadesJack of SpadesD5 of Clubs  :  0}
-{2 of ClubsQueen of SpadesDQueen of Diamonds  :  0}
-{2 of Diamonds9 of SpadesD5 of Diamonds  :  0}
-{2 of DiamondsAce of SpadesD10 of Spades  :  1}
-{2 of Hearts10 of ClubsD6 of Hearts  :  1}
-{2 of Hearts10 of HeartsD3 of Spades  :  0}
-{2 of Hearts6 of SpadesD8 of Diamonds  :  1}
-{2 of Hearts7 of SpadesDJack of Hearts  :  0}
-{2 of SpadesKing of SpadesD3 of Hearts  :  0}
-{3 of Clubs6 of SpadesD2 of Clubs  :  0}
-{3 of Diamonds2 of ClubsDJack of Spades  :  0}
-{3 of Diamonds4 of DiamondsDKing of Hearts  :  0}
-{3 of DiamondsJack of ClubsD9 of Hearts  :  0}
-{3 of Hearts7 of ClubsD10 of Diamonds  :  0}
-{3 of Hearts8 of ClubsD6 of Clubs  :  0}
-{3 of HeartsJack of ClubsD4 of Diamonds  :  0}
-{3 of HeartsJack of ClubsD7 of Diamonds  :  0}
-{3 of HeartsQueen of ClubsDJack of Clubs  :  0}
-{3 of Spades4 of SpadesD7 of Hearts  :  0}
-{3 of Spades4 of SpadesDAce of Diamonds  :  1}
-{4 of Clubs10 of SpadesD6 of Clubs  :  0}
-{4 of Diamonds10 of HeartsD7 of Spades  :  0}
-{4 of Diamonds6 of ClubsDKing of Hearts  :  1}
-{4 of Diamonds8 of DiamondsDQueen of Spades  :  0}
-{4 of Diamonds9 of ClubsD7 of Spades  :  1}
-{4 of Hearts2 of ClubsD10 of Spades  :  0}
-{4 of Hearts6 of HeartsD8 of Diamonds  :  0}
-{4 of Hearts6 of HeartsDJack of Spades  :  0}
-{4 of Hearts8 of HeartsD10 of Hearts  :  1}
-{5 of Clubs10 of ClubsDKing of Diamonds  :  1}
-{5 of Clubs9 of SpadesD5 of Hearts  :  0}
-{5 of Diamonds5 of SpadesDAce of Spades  :  0}
-{5 of Diamonds8 of ClubsDJack of Clubs  :  0}
-{5 of Diamonds8 of DiamondsD3 of Diamonds  :  1}
-{5 of DiamondsKing of ClubsD9 of Hearts  :  0}
-{5 of DiamondsKing of SpadesD9 of Hearts  :  0}
-{5 of Hearts5 of SpadesD6 of Clubs  :  1}
-{5 of Hearts6 of SpadesD3 of Clubs  :  0}
-{6 of Clubs7 of ClubsD6 of Spades  :  0}
-{6 of Diamonds7 of ClubsD8 of Diamonds  :  0}
-{6 of DiamondsAce of ClubsD2 of Diamonds  :  1}
-{6 of Hearts7 of ClubsD8 of Spades  :  0}
-{6 of HeartsKing of SpadesDKing of Clubs  :  0}
-{7 of Clubs8 of ClubsD2 of Hearts  :  0}
-{7 of Diamonds2 of HeartsDAce of Spades  :  0}
-{7 of Diamonds2 of HeartsDKing of Spades  :  0}
-{7 of Diamonds5 of ClubsD6 of Hearts  :  1}
-{7 of DiamondsAce of HeartsD8 of Spades  :  0}
-{7 of Hearts7 of SpadesDKing of Hearts  :  1}
-{7 of HeartsJack of SpadesD10 of Hearts  :  0}
-{7 of Spades10 of SpadesDQueen of Clubs  :  0}
-{7 of SpadesKing of SpadesDAce of Diamonds  :  0}
-{8 of Diamonds10 of SpadesD10 of Diamonds  :  0}
-{8 of Diamonds9 of ClubsD2 of Hearts  :  0}
-{8 of DiamondsKing of DiamondsD7 of Hearts  :  1}
-{8 of Hearts2 of ClubsD5 of Diamonds  :  1}
-{8 of HeartsAce of SpadesD6 of Spades  :  0}
-{9 of Clubs10 of SpadesDQueen of Diamonds  :  0}
-{9 of ClubsKing of ClubsD6 of Hearts  :  1}
-{9 of Diamonds10 of HeartsD9 of Clubs  :  0}
-{9 of Diamonds2 of ClubsD6 of Hearts  :  1}
-{9 of Hearts10 of ClubsD5 of Clubs  :  0}
-{9 of HeartsQueen of SpadesDKing of Spades  :  0}
-{9 of SpadesKing of SpadesDJack of Spades  :  0}
-{Ace of Clubs8 of ClubsDJack of Diamonds  :  0}
-{Ace of Hearts2 of SpadesDQueen of Diamonds  :  1}
-{Ace of Hearts3 of HeartsDKing of Diamonds  :  1}
-{Ace of Hearts7 of HeartsD3 of Hearts  :  0}
-{Ace of Hearts9 of HeartsD7 of Clubs  :  0}
-{Ace of Hearts9 of SpadesD6 of Diamonds  :  0}
-{Jack of Diamonds10 of ClubsD9 of Spades  :  0}
-{Jack of Diamonds10 of SpadesD8 of Clubs  :  0}
-{Jack of Diamonds4 of SpadesD5 of Hearts  :  1}
-{Jack of Diamonds5 of ClubsD5 of Spades  :  0}
-{Jack of Diamonds7 of SpadesDKing of Spades  :  0}
-{Jack of HeartsKing of ClubsD8 of Hearts  :  0}
-{Jack of HeartsQueen of ClubsD10 of Clubs  :  0}
-{King of Clubs6 of SpadesDAce of Spades  :  0}
-{King of ClubsJack of SpadesDQueen of Spades  :  1}
-{King of Diamonds9 of ClubsDKing of Spades  :  0}
-{King of Hearts5 of SpadesD2 of Spades  :  0}
-{King of Hearts8 of SpadesDKing of Clubs  :  0}
-{King of Hearts9 of SpadesD9 of Diamonds  :  0}
-{King of HeartsJack of SpadesD6 of Clubs  :  0}
-{Queen of Diamonds3 of HeartsD9 of Diamonds  :  1}
-{Queen of DiamondsKing of ClubsDJack of Clubs  :  0}
-{Queen of DiamondsQueen of SpadesD6 of Diamonds  :  0}
-{Queen of Hearts10 of ClubsDJack of Diamonds  :  0}
+ Progress: 1
+ Progress: 2
+ Progress: 3
+ Progress: 4
+ Progress: 5
+ Progress: 6
+ Progress: 7
+ Progress: 8
+ Progress: 9
+ Progress: 10
+ Progress: 11
+ Progress: 12
+ Progress: 13
+ Progress: 14
