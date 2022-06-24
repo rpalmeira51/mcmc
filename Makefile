@@ -1,6 +1,6 @@
-run: main blackjack2.cpp
+run: main blackjack_number_hash.cpp
 	./main
-main: blackjack2.cpp
-	g++ -std=c++17 -O3 blackjack2.cpp -o main
+main: blackjack_number_hash.cpp
+	g++ -std=c++17 -O3 blackjack_number_hash.cpp -o main
 clean: 
 	rm main

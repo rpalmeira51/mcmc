@@ -73,25 +73,25 @@ public:
         return os << "Card: " << c.svalue() << " of " << c.ssuit();
     }
 
-    string str (){
+    string str()
+    {
         return svalue() + " of " + ssuit();
     }
-    
-    
 };
 
 class Deck
 {
 private:
-    auto select_random(const map<int,Card> &s, size_t n) {
+    auto select_random(const map<int, Card> &s, size_t n)
+    {
         auto it = std::begin(s);
         // 'advance' the iterator n times
-        std::advance(it,n);
+        std::advance(it, n);
         return it;
     }
 
 public:
-    //vector<Card> cards;
+    // vector<Card> cards;
     int cardCount = 52;
     bool deckout = false;
     vector<Card> cards;
@@ -107,13 +107,13 @@ public:
             {
                 cards[i * 13 + j] = Card(j + 1, (tsuit)i);
                 // shuffle(cards.begin(),cards.end(),e);
-                //cards.insert(make_pair(i*13+j,Card(j + 1, (tsuit)i)));
+                // cards.insert(make_pair(i*13+j,Card(j + 1, (tsuit)i)));
             }
         }
 
         shuffle(std::begin(cards), std::end(cards), rng);
     }
-    
+
     void reshuffle()
     {
         auto rd = random_device{};
@@ -121,12 +121,12 @@ public:
         shuffle(std::begin(cards), std::end(cards), rng);
     }
 
-    Card NextCard(){
+    Card NextCard()
+    {
         auto r = cards.back();
         cards.pop_back();
         return r;
     }
-
 };
 
 int handpoints(vector<Card> hand) // Função pra calcular a pontuação total
@@ -150,7 +150,7 @@ int handpoints(vector<Card> hand) // Função pra calcular a pontuação total
     }
     for (int i = 0; i < aces; i++)
     {
-        if (points > 11)
+        if (points >= 11)
         {
             points = points + 1;
         }
@@ -420,18 +420,24 @@ public:
     }
 };
 
-map<string,bool> scoremap;
-bool compareCards(Card a, Card b){
-    if(a.suit < b.suit){
+map<string, bool> scoremap;
+bool compareCards(Card a, Card b)
+{
+    if (a.suit < b.suit)
+    {
         return true;
-    }else if(a.suit > b.suit){
+    }
+    else if (a.suit > b.suit)
+    {
         return false;
-    }else{
+    }
+    else
+    {
         return a.pvalue < b.pvalue;
     }
 }
-int number =0;
-int max_size =0;
+int number = 0;
+int max_size = 0;
 class MCPlayer : public Player
 {
 public:
@@ -439,46 +445,51 @@ public:
     unique_ptr<Game> game;
     int Niter = 30;
     bool keep_map;
-    MCPlayer(bool keep_map=false): keep_map(keep_map)
+    MCPlayer(bool keep_map = false) : keep_map(keep_map)
     {
-
     }
-    
+
     void setGame(Game g)
     {
         game = make_unique<Game>((*this), g, true);
     }
 
-    string playhand(){
+    string playhand()
+    {
         auto hand = playerhand;
-        sort(hand.begin(), hand.end(),compareCards);
+        sort(hand.begin(), hand.end(), compareCards);
         auto dealerhand = game->dealer.tablehand;
-        sort(dealerhand.begin(), dealerhand.end(),compareCards);
+        sort(dealerhand.begin(), dealerhand.end(), compareCards);
         string s = "";
-        for( auto c: hand){
-            s+= c.str();
+        for (auto c : hand)
+        {
+            s += c.str();
         }
-        s+= "D";
-        for(auto dh: dealerhand){
-            s+= dh.str();
+        s += "D";
+        for (auto dh : dealerhand)
+        {
+            s += dh.str();
         }
         return s;
     }
 
     bool play() override
     {
-        if(playerhand.size() >4){
+        if (playerhand.size() > 4)
+        {
             return Player::play();
         }
-        
+
         int hw = 0; // losses with hit
         int sw = 0; // losses with stand
         // cout << "Chega" << endl;
 
         string sh = "";
-        if(keep_map){
+        if (keep_map)
+        {
             sh = playhand();
-            if(scoremap.count(sh) == 1){
+            if (scoremap.count(sh) == 1)
+            {
                 return scoremap[sh];
             }
         }
@@ -490,8 +501,9 @@ public:
             ptest.playerhand = playerhand;
             ptest.setGame((*game));
             ptest.game->hit(ptest);
-            max_size = max(max_size,(int)ptest.playerhand.size());
-            if(!ptest.game->bust){
+            max_size = max(max_size, (int)ptest.playerhand.size());
+            if (!ptest.game->bust)
+            {
                 int gamescore = ptest.game->run(true);
                 if (gamescore == 1)
                     hw++;
@@ -515,14 +527,16 @@ public:
         // cout << handpoints(playerhand) << endl;
         if (hw > sw)
         {
-            if(keep_map &&scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 3){
-                //size_t found = sh.rfind("9 of Diamonds10 of Spades"); 
+            if (keep_map && scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 3)
+            {
+                // size_t found = sh.rfind("9 of Diamonds10 of Spades");
                 scoremap[sh] = true;
-            }    
+            }
             return true;
         }
         // cout << " Player chose stand " << endl;
-        if( keep_map && scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 3){
+        if (keep_map && scoremap.count(sh) == 0 && scoremap.size() < 100000 && playerhand.size() < 3)
+        {
             scoremap[sh] = false;
         }
         return false;
@@ -531,56 +545,14 @@ public:
 
 int main()
 {
-
-    // cout << " \n";
-    // cout << "Welcome to Black Jack \n";
-    // cout << " \n";
-    // cout << "    Initializing ... \n";
-
-    // Game starts by Defining the cardPool ( requires a int for the number of decks)
-    // then Knuth shuffles a list of integers from 1 to 52*N to represent the cards.
-    // we can find the value of a card by modular arithmetic.
-
-    // cout << "Dealing Cards \n";
-    // cout << "Player Hand \n";
-
-    // for (Card i : bj.player.playerhand)
-    //{
-    //     //cout << i << ", ";
-    // }
-    //
-    ////cout << '\n';
-    ////cout << " Table Hand \n";
-    //
-    // for (auto i : bj.dealer.tablehand)
-    //{
-    //    //cout << i << ", ";
-    //}
-    // cout << "\n";
-
-    // Then, we deal the first 4 cards (2 to the Dealer, 2 to the Player).
-    // We are now able to begin a Game (playerValue, tableValue, cardPool)
-    // in cardPool we should probably note the cards that have appeared or sth.
-
-    // cout << " Waiting for a player move \n";
-
-    // this is the main game loop!
-    // we then update Game.hit() or Game.split() or Game.stand()
-    // accordingly.
-
-    // proceed until the end of the turn
-    // Dealer then tries to beat the player score;
-
-    // Reveal the game winner
-    int Niter = pow(10, 4);
-    int NofDecks = 100;
+    int Niter = pow(10, 5);
     int wp = 0;
     int wd = 0;
     int wtie = 0;
     for (int i = 0; i < Niter; i++)
     {
-        MCPlayer player(false);
-        //Player player;
+        MCPlayer player(true);
+        // Player player;
         Game bj(player);
         player.setGame(bj);
 
@@ -615,8 +587,8 @@ int main()
     double ratio = 1 - wd / (double)Niter;
 
     cout << " Winrate: " << ratio << endl;
-    //cout << number<< endl;
-    //cout <<" ms " << max_size<< endl;
+    // cout << number<< endl;
+    // cout <<" ms " << max_size<< endl;
 
     return 0;
 }

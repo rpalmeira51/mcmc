@@ -1,0 +1,52 @@
+Naive Strategy
+
+    // Fill hashmap
+
+    // for (int i = 2; i < 12; i++)
+    // {
+    //     string s = "D" + to_string(i);
+    //     for (int i = 4; i <= 21; i++)
+    //     {
+    //         string r = to_string(i) + s;
+    //         if (i >= 16)
+    //         {
+    //             scoremap[r] = 0;
+    //         }
+    //         else
+    //         {
+    //             scoremap[r] = 1;
+    //         }
+    //     }
+    // }
+
+    // Stop populating hashmap
+
+
+
+Basic Strategy 
+
+    // for (int i = 2; i < 12; i++)   // Dealer Card
+    // {    
+    //     int j = i;
+    //     string s = "D" + to_string(i);
+    //     for (int i = 4; i <= 21; i++)
+    //     {
+    //         string r = to_string(i) + s;
+    //         if (i >= 17)
+    //         {
+    //             scoremap[r] = 0;
+    //         }
+    //         else if ((i >= 13) and (j < 7))
+    //         {
+    //             scoremap[r] = 0;
+    //         }
+    //         else if ((i == 12) and (j > 3) and (j < 7))
+    //         {
+    //             scoremap[r] = 0;
+    //         }
+    //         else
+    //         {
+    //             scoremap[r] = 1;
+    //         }
+    //     }
+    // }
